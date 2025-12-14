@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 public class FileWriterUtil {
 
     public static Path notesFilePath() {
-        return FileOpsUtil.workspaceRoot().resolve("input").resolve("notes.txt");
+        return FileOpsUtil.inputDir().resolve("input.txt");
     }
 
     // Overwrite File
@@ -34,5 +34,22 @@ public class FileWriterUtil {
                 "Appended: Learn buffered reading") + "\n";
 
         Files.writeString(notesFilePath(), extra, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    }
+
+    // Method to create a large file for testing
+
+    public static Path createLargeFile(Path target, long lines) throws IOException {
+        try (var writer = Files.newBufferedWriter(
+                target,
+                StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        )) {
+            for (long i = 0; i < lines; i++) {
+                writer.write("This is line number " + i);
+                writer.newLine();
+            }
+        }
+        return target;
     }
 }
